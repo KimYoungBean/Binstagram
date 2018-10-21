@@ -58,6 +58,7 @@
             android:theme="@style/ButtonStyle"
              />
         <Button
+            android:id="@+id/facebook_signin_button"
             android:textColor="@color/colorWhite"
             android:text="@string/signin_facebook"
             android:background="@drawable/btn_signin_facebook"
@@ -67,6 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp" />
         <Button
+            android:id="@+id/google_signin_button"
             android:textColor="@color/colorWhite"
             android:text="@string/signin_google"
             android:background="@drawable/btn_signin_google"
@@ -76,6 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp" />
         <Button
+            android:id="@+id/twitter_siginin_button"
             android:textColor="@color/colorWhite"
             android:text="@string/signin_twitter"
             android:background="@drawable/btn_signin_twitter"
