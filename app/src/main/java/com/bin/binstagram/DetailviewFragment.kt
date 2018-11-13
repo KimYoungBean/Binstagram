@@ -59,7 +59,7 @@ class DetailviewFragment : Fragment(){
             return CustomViewHolder(view)
         }
 
-        inner class CustomViewHolder(view: View?) : RecyclerView.ViewHolder(view) {
+        private inner class CustomViewHolder(view: View?) : RecyclerView.ViewHolder(view) {
 
         }
 
@@ -81,7 +81,41 @@ class DetailviewFragment : Fragment(){
 
             // 좋아요 카운터 설정
             viewHolder.detailviewitem_favoritecounter_textview.text = "좋아요 " + contentDTOs!![position].favoriteCount + "개"
-        }
+            var uid = FirebaseAuth.getInstance().currentUser!!.uid
+            viewHolder.detailviewitem_favorite_imageview.setOnClickListener {
+                favoriteevent(position)
+            }
 
+            // 종아요 클릭했을 때
+            if(contentDTOs!![position].favorites.containsKey(uid)){
+                // 채워진 하트
+                viewHolder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite)
+            }
+            // 좋아요 클릭 안했을 때
+            else{
+                // 빈 하트
+                viewHolder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite_border)
+            }
+        }
+        private fun favoriteevent(position: Int){
+            var tsDoc = firestore?.collection("images")?.document(contentUidList[position])
+            firestore?.runTransaction {
+                transaction ->
+                var uid = FirebaseAuth.getInstance().currentUser!!.uid
+                var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+                // 좋아요를 누른 상태에서 한번더 누르면
+                if(contentDTO!!.favorites.containsKey(uid)){
+                    contentDTO?.favoriteCount = contentDTO?.favoriteCount - 1
+                    contentDTO?.favorites.remove(uid)
+                }
+                // 좋아요를 안누른 상태에서 한번더 누르면
+                else{
+                    contentDTO?.favorites[uid] = true
+                    contentDTO?.favoriteCount = contentDTO?.favoriteCount + 1
+                }
+                transaction.set(tsDoc, contentDTO)
+            }
+        }
     }
+
 }
